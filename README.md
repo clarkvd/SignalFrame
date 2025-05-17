@@ -65,3 +65,44 @@ expanded_df = expand_bed_regions(bed_df, method="edge", expand_bp=50)
 
 # Example 3: Return unmodified regions
 unchanged_df = expand_bed_regions(bed_df)
+```
+
+### `compute_signal(bigwig_path: str, bed_df: pd.DataFrame, method: str)`
+
+**Description**  
+Computes signal values from a BigWig file over a set of genomic intervals provided in BED format.  
+The function supports multiple statistical methods (e.g., AUC, mean, max) and includes internal optimization via dynamic merging of nearby regions to reduce I/O operations and accelerate runtime.
+
+**Parameters**
+- `bigwig_path` (`str`): Path to the BigWig (.bw) file containing the signal track.
+- `bed_df` (`pd.DataFrame`): DataFrame containing BED-format genomic intervals.  
+  Must include `'chr'`, `'start'`, and `'end'` columns.
+- `method` (`str`): Type of signal computation to perform. Must be one of:
+  - `'auc'`: Sum of signal values across the region.
+  - `'mean'`: Mean signal value.
+  - `'max'`: Maximum signal value.
+  - `'min'`: Minimum signal value.
+  - `'median'`: Median signal value.
+  - `'std'`: Standard deviation of signal values.
+  - `'coverage'`: Count of non-zero signal positions.
+  - `'nonzero_mean'`: Mean of non-zero signal values only.
+
+**Returns**
+- `pd.DataFrame`: The original DataFrame with an additional column named after the chosen `method` (e.g., `"auc"` or `"mean"`), containing the computed signal values for each region.
+
+**Raises**
+- `ValueError`: If the input DataFrame does not contain the required columns (`'chr'`, `'start'`, `'end'`).
+- `ValueError`: If the specified `method` is not supported.
+
+**Examples**
+```python
+from signalframe import compute_signal
+
+# Load BED DataFrame
+bed_df = load_bed("regions.bed")
+
+# Compute area under the curve (AUC) for each region
+bed_df_with_auc = compute_signal("H3K27ac.bw", bed_df, method="auc")
+
+# Compute mean signal
+bed_df_with_mean = compute_signal("ATAC_signal.bw", bed_df, method="mean")
