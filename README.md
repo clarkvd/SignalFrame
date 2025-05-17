@@ -29,9 +29,10 @@ print(bed_df.head())
 # Load BED file with custom column names
 bed_df = load_bed("regions.bed", extra_col_names=["name", "score", "strand"])
 print(bed_df.head())
-
+```
 
 ### `expand_bed_regions(df: pd.DataFrame, method: Optional[str] = None, expand_bp: Optional[int] = None)`
+
 
 **Description**  
 Expands genomic intervals in a BED-format DataFrame either symmetrically around the center or outward from the edges. Useful for extending peak regions or extracting flanking sequence windows.
