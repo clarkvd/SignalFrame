@@ -20,14 +20,14 @@ Loads a BED file into a pandas DataFrame with standardized column names. Ensures
 
 **Examples**
 ```python
-from signalframe import load_bed
+import signalframe as sf
 
 # Load BED file with default column naming
-bed_df = load_bed("regions.bed")
+bed_df = sf.load_bed("regions.bed")
 print(bed_df.head())
 
 # Load BED file with custom column names
-bed_df = load_bed("regions.bed", extra_col_names=["name", "score", "strand"])
+bed_df = sf.load_bed("regions.bed", extra_col_names=["name", "score", "strand"])
 print(bed_df.head())
 ```
 
@@ -55,16 +55,16 @@ Expands genomic intervals in a BED-format DataFrame either symmetrically around 
 
 **Examples**
 ```python
-from signalframe import expand_bed_regions
+import signalframe as sf
 
 # Example 1: Expand regions by 100 bp around the center
-expanded_df = expand_bed_regions(bed_df, method="center", expand_bp=100)
+expanded_df = sf.expand_bed_regions(bed_df, method="center", expand_bp=100)
 
 # Example 2: Expand regions by 50 bp from the edges
-expanded_df = expand_bed_regions(bed_df, method="edge", expand_bp=50)
+expanded_df = sf.expand_bed_regions(bed_df, method="edge", expand_bp=50)
 
 # Example 3: Return unmodified regions
-unchanged_df = expand_bed_regions(bed_df)
+unchanged_df = sf.expand_bed_regions(bed_df)
 ```
 
 ### `compute_signal(bigwig_path: str, bed_df: pd.DataFrame, method: str)`
@@ -96,16 +96,16 @@ The function supports multiple statistical methods (e.g., AUC, mean, max) and in
 
 **Examples**
 ```python
-from signalframe import compute_signal
+import signalframe as sf
 
 # Load BED DataFrame
-bed_df = load_bed("regions.bed")
+bed_df = sf.load_bed("regions.bed")
 
 # Compute area under the curve (AUC) for each region
-bed_df_with_auc = compute_signal("H3K27ac.bw", bed_df, method="auc")
+bed_df_with_auc = sf.compute_signal("H3K27ac.bw", bed_df, method="auc")
 
 # Compute mean signal
-bed_df_with_mean = compute_signal("ATAC_signal.bw", bed_df, method="mean")
+bed_df_with_mean = sf.compute_signal("ATAC_signal.bw", bed_df, method="mean")
 ```
 
 ### `compute_signal_multi(bigwig_paths: List[str], bed_df: pd.DataFrame, method: str)`
@@ -138,19 +138,19 @@ The function merges nearby intervals internally to reduce I/O and optimize perfo
 
 **Examples**
 ```python
-from signalframe import compute_signal_multi
+import signalframe as sf
 
 # Load a BED file
-bed_df = load_bed("peaks.bed")
+bed_df = sf.load_bed("peaks.bed")
 
 # Define BigWig files
 bw_files = ["H3K27ac.bw", "ATAC.bw", "H3K4me1.bw"]
 
 # Compute AUC for each region in each file
-result_df = compute_signal_multi(bw_files, bed_df, method="auc")
+result_df = sf.compute_signal_multi(bw_files, bed_df, method="auc")
 
 # Compute mean signal
-result_df = compute_signal_multi(bw_files, bed_df, method="mean")
+result_df = sf.compute_signal_multi(bw_files, bed_df, method="mean")
 ```
 
 ### `normalize_signal(df: pd.DataFrame, columns: Union[str, List[str]], method: str, pseudocount: float = 0.1, reference_matrix: Optional[Union[str, np.ndarray]] = None)`
@@ -183,22 +183,22 @@ This is useful for standardizing signal values (e.g., AUCs) across different exp
 
 **Examples**
 ```python
-from signalframe import normalize_signal
+import signalframe as sf
 
 # Normalize by region length (AUC per bp)
-df = normalize_signal(df, columns="H3K27ac_auc", method="length")
+df = sf.normalize_signal(df, columns="H3K27ac_auc", method="length")
 
 # Z-score normalization
-df = normalize_signal(df, columns=["H3K27ac_auc", "ATAC_auc"], method="zscore")
+df = sf.normalize_signal(df, columns=["H3K27ac_auc", "ATAC_auc"], method="zscore")
 
 # Log2 normalization with pseudocount
-df = normalize_signal(df, columns="H3K27ac_auc", method="log2", pseudocount=0.01)
+df = sf.normalize_signal(df, columns="H3K27ac_auc", method="log2", pseudocount=0.01)
 
 # Min-max scaling
-df = normalize_signal(df, columns="ATAC_auc", method="minmax")
+df = sf.normalize_signal(df, columns="ATAC_auc", method="minmax")
 
 # Quantile normalization using median profile
-df = normalize_signal(df, columns=["H3K27ac_auc", "ATAC_auc"], method="quantile", reference_matrix="median")
+df = sf.normalize_signal(df, columns=["H3K27ac_auc", "ATAC_auc"], method="quantile", reference_matrix="median")
 ```
 
 ### `compare_tracks(df: pd.DataFrame, reference: str, comparisons: Union[str, List[str]], mode: Union[str, List[str]] = ["difference", "fold_change", "log2FC", "percent_change"], pseudocount: float = 0.1)`
@@ -227,13 +227,13 @@ This is useful for contrasting peak intensity or accessibility between experimen
 
 **Examples**
 ```python
-from signalframe import compare_tracks
+import signalframe as sf
 
 # Compare ATAC signal to H3K27ac using fold change and log2FC
-df = compare_tracks(df, reference="ATAC_auc", comparisons="H3K27ac_auc", mode=["fold_change", "log2FC"])
+df = sf.compare_tracks(df, reference="ATAC_auc", comparisons="H3K27ac_auc", mode=["fold_change", "log2FC"])
 
 # Compare against multiple tracks using all metrics
-df = compare_tracks(df, reference="ATAC_auc", comparisons=["H3K27ac_auc", "H3K4me1_auc"])
+df = sf.compare_tracks(df, reference="ATAC_auc", comparisons=["H3K27ac_auc", "H3K4me1_auc"])
 ```
 
 ### `sort_signal_df(df: pd.DataFrame, sort_by: str = "genomic_position", ascending: bool = True)`
@@ -260,13 +260,13 @@ This is useful for organizing results before visualization, exporting, or downst
 
 **Examples**
 ```python
-from signalframe import sort_signal_df
+import signalframe as sf
 
 # Sort by genomic coordinates
-sorted_df = sort_signal_df(df, sort_by="genomic_position")
+sorted_df = sf.sort_signal_df(df, sort_by="genomic_position")
 
 # Sort by signal intensity (e.g., AUC column)
-sorted_df = sort_signal_df(df, sort_by="H3K27ac_auc", ascending=False)
+sorted_df = sf.sort_signal_df(df, sort_by="H3K27ac_auc", ascending=False)
 ```
 
 
@@ -293,13 +293,13 @@ Useful for evaluating differential signals (e.g., peak intensities) between expe
 
 **Examples**
 ```python
-from signalframe import compare_signal_groups
+import signalframe as sf
 
 # Compare mean signal between FoxP3 and input groups using t-test
-pval = compare_signal_groups(df, group_col="group", value_col="H3K27ac_auc", test="t-test")
+pval = sf.compare_signal_groups(df, group_col="group", value_col="H3K27ac_auc", test="t-test")
 
 # Use Mann–Whitney U test instead
-pval = compare_signal_groups(df, group_col="group", value_col="ATAC_auc", test="mannwhitney")
+pval = sf.compare_signal_groups(df, group_col="group", value_col="ATAC_auc", test="mannwhitney")
 ```
 
 
@@ -325,13 +325,13 @@ Uses `statsmodels` under the hood to fit an OLS model and generate the ANOVA sum
 
 **Examples**
 ```python
-from signalframe import run_one_way_anova
+import signalframe as sf
 
 # Run one-way ANOVA comparing H3K27ac signal across tissue types
-anova_table = run_one_way_anova(df, factor="tissue", response="H3K27ac_auc")
+anova_table = sf.run_one_way_anova(df, factor="tissue", response="H3K27ac_auc")
 
 # Also retrieve the fitted model for further inspection
-anova_table, model = run_one_way_anova(df, factor="condition", response="ATAC_signal", return_model=True)
+anova_table, model = sf.run_one_way_anova(df, factor="condition", response="ATAC_signal", return_model=True)
 ```
 
 
@@ -360,18 +360,20 @@ Uses `statsmodels` OLS modeling and ANOVA Type II sum of squares.
 
 **Examples**
 ```python
-from signalframe import run_two_way_anova
+import signalframe as sf
 
 # Run two-way ANOVA including interaction
-anova_table = run_two_way_anova(df, factor1="tissue", factor2="condition", response="H3K27ac_auc")
+anova_table = sf.run_two_way_anova(df, factor1="tissue", factor2="condition", response="H3K27ac_auc")
 
 # Run without interaction and return the fitted model as well
-anova_table, model = run_two_way_anova(df,
-                                       factor1="cell_type",
-                                       factor2="treatment",
-                                       response="signal",
-                                       include_interaction=False,
-                                       return_model=True)
+anova_table, model = sf.run_two_way_anova(
+    df,
+    factor1="cell_type",
+    factor2="treatment",
+    response="signal",
+    include_interaction=False,
+    return_model=True
+)
 ```
 
 ### `plot_signal_region(bigwig_paths: Union[str, List[str]], chrom: str, start: int, end: int, labels: Optional[Union[str, List[str]]] = None, title: Optional[str] = None, figsize: tuple = (12, 4))`
@@ -399,13 +401,13 @@ Useful for visual inspection of peak shapes, comparisons between tracks, and ide
 
 **Examples**
 ```python
-from signalframe import plot_signal_region
+import signalframe as sf
 
 # Plot a single BigWig track
-plot_signal_region("ATAC.bw", chrom="chr15", start=100000, end=101000)
+sf.plot_signal_region("ATAC.bw", chrom="chr15", start=100000, end=101000)
 
 # Plot multiple tracks with custom labels and a title
-plot_signal_region(
+sf.plot_signal_region(
     bigwig_paths=["H3K27ac.bw", "ATAC.bw"],
     chrom="chr7",
     start=50000,
@@ -443,13 +445,13 @@ This function is ideal for visually inspecting signal profiles over peaks, motif
 
 **Examples**
 ```python
-from signalframe import plot_signals_from_bed
+import signalframe as sf
 
 # Plot the first 10 peaks in the BED DataFrame
-plot_signals_from_bed(bed_df, bigwig_paths="H3K27ac.bw")
+sf.plot_signals_from_bed(bed_df, bigwig_paths="H3K27ac.bw")
 
 # Plot up to 5 regions with two BigWig tracks, shared y-axis turned off
-plot_signals_from_bed(
+sf.plot_signals_from_bed(
     bed_df,
     bigwig_paths=["ATAC.bw", "H3K27ac.bw"],
     max_plots=5,
