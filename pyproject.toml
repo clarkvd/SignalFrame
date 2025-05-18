@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signalframe"
+version = "0.1.0"
+authors = [{ name="Ryan Clark"}]
+description = "Fast and memory-efficient genomic signal analysis"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+dependencies = [
+  "pandas",
+  "numpy",
+  "pyBigWig",
+  "matplotlib",
+  "scipy",
+  "statsmodels",
+  "tqdm"
+]
