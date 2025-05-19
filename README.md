@@ -31,6 +31,26 @@ bed_df = sf.load_bed("regions.bed", extra_col_names=["name", "score", "strand"])
 print(bed_df.head())
 ```
 
+### `save_bed(df: pd.DataFrame, output_path: str)`
+
+**Description**  
+Saves a pandas DataFrame to a BED-format file using tab-separated values, without writing headers or index columns.
+
+**Parameters**
+- `df` (`pd.DataFrame`): DataFrame to save. Should ideally include at least `chr`, `start`, and `end` columns.
+- `output_path` (`str`): Path to the output BED file.
+
+**Returns**
+- `None`
+
+**Examples**
+```python
+import signalframe as sf
+
+# Save DataFrame as BED file
+sf.save_bed(bed_df, "output.bed")
+```
+
 ### `expand_bed_regions(df: pd.DataFrame, method: Optional[str] = None, expand_bp: Optional[int] = None)`
 
 
