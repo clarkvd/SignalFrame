@@ -15,7 +15,7 @@ dependencies = [
   "numpy",
   "pyBigWig",
   "matplotlib",
-  "scipy",
-  "statsmodels",
+  "scipy<1.12",                
+  "statsmodels>=0.14.0,<0.15",
   "tqdm"
 ]
