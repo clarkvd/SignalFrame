@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "signalframe"
-version = "0.1.0"
+version = "0.2.2"
 authors = [{ name="Ryan Clark"}]
 description = "Fast and memory-efficient genomic signal analysis"
 readme = "README.md"
@@ -15,7 +15,7 @@ dependencies = [
   "numpy",
   "pyBigWig",
   "matplotlib",
-  "scipy<1.12",                
-  "statsmodels>=0.14.0,<0.15",
+  "scipy==1.14.1",
+  "statsmodels",
   "tqdm"
 ]
